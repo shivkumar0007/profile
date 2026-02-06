@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Player</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .player-container {
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .back-btn {
+            background: #e50914;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        video, img, audio {
+            width: 100%;
+            max-height: 70vh;
+            border-radius: 10px;
+            background: black;
+        }
+
+        .video-info {
+            margin-top: 15px;
+        }
+
+        .video-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .video-description {
+            color: #ccc;
+        }
+
+        .video-date {
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="player-container">
+
+    <button class="back-btn" onclick="window.history.back()">← Back</button>
+
+    <!-- Dynamic media container -->
+    <div id="media-box"></div>
+
+    <div class="video-info">
+        <h1 id="video-title" class="video-title"></h1>
+        <p id="video-description" class="video-description"></p>
+        <p id="video-date" class="video-date"></p>
+    </div>
+
+</div>
+
+<script src="./js/player.js"></script>
+</body>
+</html>

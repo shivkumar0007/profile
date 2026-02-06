@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - My Life in Movies</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <h1>My Life in Movies</h1>
+        <button id="logout-btn">Logout</button>
+    </nav>
+    <main>
+        <section class="row">
+            <h2>My Videos</h2>
+            <div class="grid" id="video-grid"></div>
+        </section>
+        <section class="row">
+            <h2>My Images</h2>
+            <div class="grid" id="image-grid"></div>
+        </section>
+        <section class="row">
+            <h2>My Audio</h2>
+            <div class="grid" id="audio-grid"></div>
+        </section>
+        <button id="upload-btn">Upload New</button>
+    </main>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal">&times;</span>
+            <div id="media-player"></div>
+        </div>
+    </div>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
