@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const BACKEND_URL =
-  "https://script.google.com/macros/s/AKfycby3c8CiqxUXtmt_yXiTzPJglw6xo1PR1POm6MQUIJcHjHP5PNaDAFeRe-xOGNP7s2gY/exec";
+  "https://script.google.com/macros/s/AKfycbxRQ9Kn2HFlOdlPzPY1mvpojN6B_6j93v3cFc71hVXeA4xKfVe-THuhy9UxQ0lQYdRv/exec";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
@@ -13,27 +13,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ================= LOAD USER MEDIA =================
   try {
-    const res = await fetch(
-      `${BACKEND_URL}?action=getUserMedia&token=${encodeURIComponent(token)}`
-    );
+    const formData = new URLSearchParams();
+    formData.append("action", "getUserMedia");
+    formData.append("token", token);
+
+    const res = await fetch(BACKEND_URL, {
+      method: "POST",
+      body: formData,
+    });
 
     const data = await res.json();
     console.log("Media API:", data);
 
-    // ❌ invalid session
+    // ❌ Session invalid → ONLY show message (no auto logout)
     if (!data.success) {
-      localStorage.clear();
-      window.location.href = "login.html";
+      showMessage("Session issue. Please login again.");
       return;
     }
 
     renderMedia(data.media || []);
   } catch (error) {
     console.error("Load media error:", error);
-    showMessage("Media load nahi ho raha.");
+    showMessage("Media load nahi ho raha. Network issue ho sakta hai.");
   }
 
-  // ================= LOGOUT =================
+  // ================= LOGOUT BUTTON =================
   document.getElementById("logout-btn")?.addEventListener("click", () => {
     localStorage.clear();
     window.location.href = "login.html";
@@ -67,7 +71,6 @@ function renderMedia(media) {
   imageGrid.innerHTML = "";
   audioGrid.innerHTML = "";
 
-  // 📭 No media case
   if (!media.length) {
     showMessage("Abhi tak koi media upload nahi hua.");
     return;
@@ -77,31 +80,24 @@ function renderMedia(media) {
     const card = document.createElement("div");
     card.className = "card";
 
-    // ================= VIDEO =================
     if (item.type === "video") {
       card.innerHTML = `
         <video src="${item.fileURL}" muted></video>
         <p>${item.title}</p>
       `;
-
       const video = card.querySelector("video");
       card.addEventListener("mouseenter", () => video.play());
       card.addEventListener("mouseleave", () => video.pause());
-
       videoGrid.appendChild(card);
-    }
 
-    // ================= IMAGE =================
-    else if (item.type === "image") {
+    } else if (item.type === "image") {
       card.innerHTML = `
         <img src="${item.fileURL}" alt="${item.title}">
         <p>${item.title}</p>
       `;
       imageGrid.appendChild(card);
-    }
 
-    // ================= AUDIO =================
-    else if (item.type === "audio") {
+    } else if (item.type === "audio") {
       card.innerHTML = `
         <audio src="${item.fileURL}" controls></audio>
         <p>${item.title}</p>
@@ -109,7 +105,6 @@ function renderMedia(media) {
       audioGrid.appendChild(card);
     }
 
-    // 🔍 OPEN MODAL
     card.addEventListener("click", () => openModal(item));
   });
 }
@@ -134,7 +129,7 @@ function openModal(item) {
   modal.style.display = "block";
 }
 
-// ================= MESSAGE HELPER =================
+// ================= MESSAGE =================
 function showMessage(msg) {
   const container = document.getElementById("video-grid");
   if (container) container.innerHTML = `<p style="padding:20px;">${msg}</p>`;

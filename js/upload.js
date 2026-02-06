@@ -1,5 +1,7 @@
-// upload.js - Upload to Cloudinary → Save to Apps Script backend
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycby3c8CiqxUXtmt_yXiTzPJglw6xo1PR1POm6MQUIJcHjHP5PNaDAFeRe-xOGNP7s2gY/exec";
+// ================= CONFIG =================
+const BACKEND_URL =
+  "https://script.google.com/macros/s/AKfycbxRQ9Kn2HFlOdlPzPY1mvpojN6B_6j93v3cFc71hVXeA4xKfVe-THuhy9UxQ0lQYdRv/exec";
+
 const CLOUD_NAME = "dqhovacnx";
 const UPLOAD_PRESET = "video_upload";
 
@@ -32,32 +34,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // ================= CLOUDINARY UPLOAD =================
+      progress.textContent = "Uploading to Cloudinary...";
+
       const cloudForm = new FormData();
       cloudForm.append("file", file);
       cloudForm.append("upload_preset", UPLOAD_PRESET);
 
-      progress.textContent = "Uploading to cloud...";
-
       const cloudResponse = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`,
-        {
-          method: "POST",
-          body: cloudForm,
-        }
+        { method: "POST", body: cloudForm }
       );
 
       const cloudData = await cloudResponse.json();
-      if (!cloudData.secure_url) throw new Error("Cloud upload failed");
+      console.log("Cloudinary response:", cloudData);
+
+      if (!cloudResponse.ok || !cloudData.secure_url) {
+        throw new Error(cloudData.error?.message || "Cloudinary upload failed");
+      }
 
       const fileURL = cloudData.secure_url;
 
       const thumbnailURL =
         type === "video"
-          ? cloudData.secure_url.replace("/upload/", "/upload/w_300,h_150,c_fill/")
+          ? fileURL.replace("/upload/", "/upload/w_300,h_150,c_fill/")
           : fileURL;
 
-      // ================= SAVE TO BACKEND =================
-      progress.textContent = "Saving to server...";
+      // ================= SAVE TO APPS SCRIPT =================
+      progress.textContent = "Saving media to server...";
 
       const formData = new URLSearchParams();
       formData.append("action", "addMedia");
@@ -74,17 +77,18 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const backendData = await backendResponse.json();
+      console.log("Backend response:", backendData);
 
-      if (backendData.success) {
-        alert("Upload successful!");
-        window.location.href = "dashboard.html";
-      } else {
-        alert(backendData.message || "Save failed.");
+      if (!backendData.success) {
+        throw new Error(backendData.message || "Backend save failed");
       }
+
+      alert("✅ Upload successful!");
+      window.location.href = "dashboard.html";
 
     } catch (error) {
       console.error("Upload error:", error);
-      alert("Upload failed. Please try again.");
+      alert("❌ Upload failed:\n" + error.message);
     } finally {
       progress.textContent = "";
     }
