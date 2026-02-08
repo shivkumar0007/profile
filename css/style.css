@@ -159,47 +159,68 @@ body.dashboard-body {
 
 /* ================= HERO ================= */
 
-/* ================= NETFLIX HERO FINAL ================= *//* ===== CINEMATIC NETFLIX HERO ===== */
+/* ================= NETFLIX HERO FINAL ================= *//* ===== 
+/* ===== CINEMATIC NETFLIX HERO (FIXED) ===== */
+/* ===== HERO SECTION (FIXED FOR ALL SCREENS) ===== */
+/* ===== HERO SECTION (FIXED RATIO) ===== */
 .hero {
+  height: 90vh;
   position: relative;
-  height: 78vh;
-  min-height: 460px;
+  width: 100%;
+  /* 16:9 ratio maintain karega taaki image na pichke */
+  aspect-ratio: 16 / 9; 
+  max-height: 85vh; /* Badi screen par screen se bahar na jaye */
+  background-color: #000;
   overflow: hidden;
+  display: flex;
+  align-items: flex-end;
 }
 
-/* background */
 .hero-img {
+   filter: brightness(55%);
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  filter: brightness(70%);
-  transition: transform 0.8s ease, filter 0.8s ease;
+  /* Ye image ko properly fill karega bina stretch kiye */
+  object-fit: cover; 
+  /* Image ka center aur thoda top dikhayega */
+  object-position: center 20%; 
+  
+  background: linear-gradient(to top, #141414 8%, transparent 40%),
+              linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 50%);
+  z-index: 1;
 }
+
+/* Cinematic Shadows */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Neeche se upar tak dark shadow */
+  background: linear-gradient(to top, #141414 15%, transparent 60%),
+              linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Mobile Screens ke liye adjust */
+@media (max-width: 768px) {
+  .hero {
+    /* Mobile par thoda zyada height dikhane ke liye ratio change */
+    aspect-ratio: 4 / 3; 
+  }
+  .hero-content {
+    padding-bottom: 20px;
+  }
+}
+
 
 /* slow zoom */
 .hero:hover .hero-img {
   transform: scale(1.06);
   filter: brightness(55%);
-}
-
-/* cinematic gradient */
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, #141414 5%, transparent 60%),
-    linear-gradient(to right, #141414 0%, transparent 40%);
-  z-index: 2;
-}
-
-/* content block */
-.hero-content {
-  position: absolute;
-  bottom: 20%;
-  left: 5%;
-  max-width: 560px;
-  z-index: 3;
 }
 
 /* title */
@@ -306,19 +327,14 @@ body.dashboard-body {
 }
 
 /* Cinematic Vignette – Kam intense */
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 30% 50%, transparent 20%, rgba(20, 20, 20, 0.4) 80%); /* Kam dark */
-  z-index: 2;
-  pointer-events: none;
-}
 
 /* ================= CONTENT ROWS ================= */
 .content {
- padding-left: 2rem;
-/* Space kam kiya – pehle 70vh tha, ab 60vh taaki hero aur content ke bich gap kam ho */
+  margin-top: -60px; /* Hero banner ke upar thoda overlap karega */
+  padding-left: 4%;
+  position: relative;
+  z-index: 10;
+  background: transparent;
 }
 
 .row {
@@ -505,9 +521,6 @@ body.dashboard-body {
      margin-bottom: 20px; 
   }
 
-  .hero-img {
-    filter: brightness(85%); /* Mobile pe aur bright */
-  }
 
   .hero-content h1 {
     font-size: 2rem;
