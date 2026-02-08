@@ -80,6 +80,9 @@ body.dashboard-body {
   position: relative;
   box-shadow: var(--shadow);
   animation: fadeIn 0.3s ease;
+  margin: auto;
+  display: flex;
+  justify-content: center;
 }
 
 .modal-content.large {
@@ -748,4 +751,187 @@ body.dashboard-body {
 .player-list::-webkit-scrollbar-thumb {
   background: #333;
   border-radius: 10px;
+}
+
+/* ================= GLOBAL SETTINGS ================= */
+:root {
+  --netflix-red: #e50914;
+  --netflix-black: #000;
+  --netflix-dark-gray: #141414;
+  --netflix-light-gray: #333;
+  --text-white: #ffffff;
+  --text-gray: #b3b3b3;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body.login-body {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+              url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bca1-0746f37673b6/74815344-9333-4632-840e-0943999e525a/IN-en-20220502-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ================= LOGIN CONTAINER ================= */
+.login-container {
+  background: rgba(0, 0, 0, 0.75);
+  padding: 60px;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.logo {
+  color: var(--netflix-red);
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+/* ================= FORMS & INPUTS ================= */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+input {
+  width: 100%;
+  padding: 16px;
+  background: var(--netflix-light-gray);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+input:focus {
+  background: #454545;
+  box-shadow: inset 0 -2px 0 var(--netflix-red);
+}
+
+button {
+  padding: 16px;
+  background: var(--netflix-red);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: var(--transition);
+}
+
+button:hover {
+  background: #f40612;
+  transform: scale(1.02);
+}
+
+/* ================= HELPER TEXTS ================= */
+.helper-text {
+  color: var(--text-gray);
+  margin-top: 15px;
+  font-size: 0.95rem;
+}
+
+.helper-text a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.helper-text a:hover {
+  text-decoration: underline;
+}
+
+/* ================= MODALS (Register/Forgot) ================= */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--netflix-black);
+  padding: 40px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  position: relative;
+  border: 1px solid #333;
+}
+
+.modal-content h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  color: var(--text-gray);
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: white;
+}
+
+/* ================= LOADER ================= */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader::after {
+  content: "";
+  width: 50px;
+  height: 50px;
+  border: 5px solid #333;
+  border-top: 5px solid var(--netflix-red);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 500px) {
+  .login-container {
+    padding: 30px;
+    background: black; /* Mobile pe pura black look */
+  }
+  
+  body.login-body {
+    background: black;
+  }
 }
