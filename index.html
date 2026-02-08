@@ -1,23 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Life in Movies</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Netflix Clone - Login</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-    <header>
-        <nav>
-            <h1>My Life in Movies</h1>
-            <a href="login.html">Sign In</a>
-        </nav>
-    </header>
-    <section class="hero">
-        <h2>Unlimited Movies, TV Shows, and more.</h2>
-        <p>Watch anywhere. Cancel anytime.</p>
-        <a href="register.html" class="cta">Get Started</a>
-    </section>
-    <script src="js/index.js"></script>
+
+<body class="login-body">
+
+  <!-- LOGIN BOX -->
+  <div class="login-container">
+    <h1 class="logo">NETFLIX</h1>
+
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Sign In</button>
+    </form>
+
+    <p class="helper-text">
+      New to Netflix?
+      <a href="#" id="registerLink">Sign up now</a>
+    </p>
+
+    <p class="helper-text">
+      <a href="#" id="forgotLink">Forgot Password?</a>
+    </p>
+
+    <div id="message" class="message"></div>
+  </div>
+
+  <!-- ================= REGISTER MODAL ================= -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeRegisterModal()">&times;</span>
+      <h2>Create Account</h2>
+
+      <form id="registerForm">
+        <input type="text" id="regUsername" placeholder="Username" required />
+        <input type="email" id="regEmail" placeholder="Email" required />
+        <input type="password" id="regPassword" placeholder="Password" required />
+        <button type="submit">Register</button>
+      </form>
+
+      <div id="regMessage" class="message"></div>
+    </div>
+  </div>
+
+  <!-- ================= FORGOT PASSWORD MODAL ================= -->
+  <div id="forgotModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeForgotModal()">&times;</span>
+
+      <h2>Reset Password</h2>
+
+      <!-- STEP 1 EMAIL -->
+      <div id="stepEmail">
+        <input type="email" id="forgotEmail" placeholder="Enter your email" />
+        <button onclick="sendOTP()">Send OTP</button>
+      </div>
+
+      <!-- STEP 2 OTP -->
+      <div id="stepOTP" style="display:none;">
+        <input type="text" id="otp" placeholder="Enter OTP" />
+        <button onclick="verifyOTP()">Verify OTP</button>
+      </div>
+
+      <!-- STEP 3 NEW PASSWORD -->
+      <div id="stepPassword" style="display:none;">
+        <input type="password" id="newPassword" placeholder="New Password" />
+        <button onclick="resetPassword()">Update Password</button>
+      </div>
+
+      <div id="forgotMessage" class="message"></div>
+    </div>
+  </div>
+
+  <!-- ================= LOADER ================= -->
+  <div id="loader" class="loader hidden"></div>
+
+  <!-- JS -->
+  <script src="js/auth.js"></script>
 </body>
 </html>

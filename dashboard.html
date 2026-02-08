@@ -1,37 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - My Life in Movies</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netflix Clone - Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-    <nav>
-        <h1>My Life in Movies</h1>
-        <button id="logout-btn">Logout</button>
-    </nav>
-    <main>
-        <section class="row">
-            <h2>My Videos</h2>
-            <div class="grid" id="video-grid"></div>
-        </section>
-        <section class="row">
-            <h2>My Images</h2>
-            <div class="grid" id="image-grid"></div>
-        </section>
-        <section class="row">
-            <h2>My Audio</h2>
-            <div class="grid" id="audio-grid"></div>
-        </section>
-        <button id="upload-btn">Upload New</button>
-    </main>
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span id="close-modal">&times;</span>
-            <div id="media-player"></div>
-        </div>
+
+<body class="dashboard-body">
+
+  <!-- ================= HEADER ================= -->
+  <header class="header">
+    <div class="logo">NETFLIX</div>
+
+    <div class="profile-menu">
+      <img
+        id="profileImg"
+        class="profile-img"
+        src=""
+        alt="Profile"
+        onclick="toggleProfileMenu()"
+      />
+
+      <div id="profileDropdown" class="dropdown hidden">
+        <button onclick="showUploadModal()">Upload Media</button>
+        <button onclick="logout()">Logout</button>
+      </div>
     </div>
-    <script src="js/dashboard.js"></script>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="heroSection">
+
+    <!-- ✏️ Pencil Edit Button -->
+    <button class="hero-edit" onclick="openHeroEditor()">✏️</button>
+
+    <div class="hero-overlay"></div>
+
+    <img id="heroImg" class="hero-img" src="" alt="Hero Banner" />
+
+    <div class="hero-content">
+      <h1 id="heroTitle">Welcome</h1>
+      <p id="heroDesc">Enjoy your media library</p>
+      <button class="play-btn" id="heroPlayBtn">Play</button>
+    </div>
+  </section>
+
+  <!-- ================= CONTENT ROWS ================= -->
+  <main class="content">
+
+    <div class="row">
+      <h2>Videos</h2>
+      <div class="cards" id="videosCards"></div>
+    </div>
+
+    <div class="row">
+      <h2>Audios</h2>
+      <div class="cards" id="audiosCards"></div>
+    </div>
+
+    <div class="row">
+      <h2>Images</h2>
+      <div class="cards" id="imagesCards"></div>
+    </div>
+
+  </main>
+
+  <!-- ================= MEDIA VIEWER MODAL ================= -->
+  <div id="viewerModal" class="modal">
+    <div class="modal-content large">
+      <span class="close" onclick="closeViewer()">&times;</span>
+      <div id="mediaViewer" class="media-viewer"></div>
+    </div>
+  </div>
+
+  <!-- ================= UPLOAD MODAL ================= -->
+  <div id="uploadModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeUploadModal()">&times;</span>
+
+      <h2>Upload Media</h2>
+
+      <form id="uploadForm">
+        <select id="mediaType" required>
+          <option value="video">Video</option>
+          <option value="audio">Audio</option>
+          <option value="image">Image</option>
+        </select>
+
+        <input type="text" id="mediaTitle" placeholder="Title" required />
+        <input type="file" id="mediaFile" required />
+
+        <button type="submit">Upload</button>
+      </form>
+
+      <div id="uploadMessage" class="message"></div>
+    </div>
+  </div>
+
+  <!-- ================= HERO EDITOR MODAL ================= -->
+  <div id="heroEditor" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeHeroEditor()">&times;</span>
+      <h2>Edit Hero</h2>
+      <div id="heroList"></div>
+    </div>
+  </div>
+
+  <!-- ================= GLOBAL LOADER ================= -->
+  <div id="loader" class="loader hidden"></div>
+
+  <!-- ================= NETFLIX STYLE PLAYER ================= -->
+  <div id="playerModal" class="player-modal">
+
+    <!-- CENTER CONTAINER (important fix) -->
+    <div class="player-container">
+
+      <!-- header -->
+      <div class="player-header">
+        <h3>Now Playing</h3>
+        <button onclick="closePlayer()">✕</button>
+      </div>
+
+      <!-- main video/audio -->
+      <div id="playerView" class="player-view"></div>
+
+      <!-- scrollable media list -->
+      <div id="playerList" class="player-list"></div>
+
+    </div>
+  </div>
+
+  <!-- ================= JS ================= -->
+  <script src="js/dashboard.js"></script>
+  <script src="js/upload.js"></script>
+
 </body>
 </html>

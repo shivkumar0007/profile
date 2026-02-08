@@ -1,96 +1,77 @@
-// ================= CONFIG =================
-const BACKEND_URL =
-  "https://script.google.com/macros/s/AKfycbxRQ9Kn2HFlOdlPzPY1mvpojN6B_6j93v3cFc71hVXeA4xKfVe-THuhy9UxQ0lQYdRv/exec";
-
-const CLOUD_NAME = "dqhovacnx";
-const UPLOAD_PRESET = "video_upload";
-
+/**************** SAFE INIT ****************/
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("upload-form");
-  const progress = document.getElementById("progress");
-  const token = localStorage.getItem("token");
+  const uploadForm = document.getElementById("uploadForm");
+  const uploadMsg = document.getElementById("uploadMessage");
 
-  // 🔐 Not logged in
-  if (!token) {
-    alert("Please login first.");
-    window.location.href = "login.html";
-    return;
-  }
+  if (!uploadForm) return; // page safety
 
-  form.addEventListener("submit", async (e) => {
+  uploadForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const file = document.getElementById("file").files[0];
-    if (!file) return alert("Please select a file.");
+    const type = document.getElementById("mediaType").value;
+    const title = document.getElementById("mediaTitle").value.trim();
+    const file = document.getElementById("mediaFile").files[0];
 
-    const title = document.getElementById("title").value.trim();
-    const description = document.getElementById("description").value.trim();
+    if (!file) return showUploadMsg("Select a file ❌");
 
-    const type = file.type.startsWith("video")
-      ? "video"
-      : file.type.startsWith("image")
-      ? "image"
-      : "audio";
+    showLoader(true);
+    showUploadMsg("Uploading...", true);
 
     try {
-      // ================= CLOUDINARY UPLOAD =================
-      progress.textContent = "Uploading to Cloudinary...";
+      const cloudName = "dqhovacnx";
+      const preset = "netflix_media";
 
-      const cloudForm = new FormData();
-      cloudForm.append("file", file);
-      cloudForm.append("upload_preset", UPLOAD_PRESET);
+      /********** CLOUDINARY UPLOAD **********/
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", preset);
 
-      const cloudResponse = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`,
-        { method: "POST", body: cloudForm }
+      const cloudRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+        { method: "POST", body: formData }
       );
 
-      const cloudData = await cloudResponse.json();
-      console.log("Cloudinary response:", cloudData);
+      const cloudData = await cloudRes.json();
 
-      if (!cloudResponse.ok || !cloudData.secure_url) {
-        throw new Error(cloudData.error?.message || "Cloudinary upload failed");
+      if (!cloudData.secure_url) {
+        throw new Error("Cloudinary upload failed");
       }
 
-      const fileURL = cloudData.secure_url;
+      const mediaUrl = cloudData.secure_url;
 
-      const thumbnailURL =
-        type === "video"
-          ? fileURL.replace("/upload/", "/upload/w_300,h_150,c_fill/")
-          : fileURL;
+      /********** SAVE TO GOOGLE SHEET **********/
+      const form = new FormData();
+      form.append("action", "uploadMedia");
+      form.append("type", type);
+      form.append("title", title);
+      form.append("url", mediaUrl);
 
-      // ================= SAVE TO APPS SCRIPT =================
-      progress.textContent = "Saving media to server...";
+      // thumbnail = same url (auto preview)
+      form.append("thumbnailUrl", mediaUrl);
 
-      const formData = new URLSearchParams();
-      formData.append("action", "addMedia");
-      formData.append("token", token);
-      formData.append("title", title);
-      formData.append("description", description);
-      formData.append("thumbnailURL", thumbnailURL);
-      formData.append("fileURL", fileURL);
-      formData.append("type", type);
+      form.append("uploader", user.username);
 
-      const backendResponse = await fetch(BACKEND_URL, {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(API_BASE, { method: "POST", body: form });
+      const data = await res.json();
 
-      const backendData = await backendResponse.json();
-      console.log("Backend response:", backendData);
+      if (!data.success) throw new Error("Sheet save failed");
 
-      if (!backendData.success) {
-        throw new Error(backendData.message || "Backend save failed");
-      }
+      /********** SUCCESS **********/
+      showUploadMsg("Upload successful ✅", true);
+      uploadForm.reset();
+      closeUploadModal();
+      loadDashboard();
 
-      alert("✅ Upload successful!");
-      window.location.href = "dashboard.html";
-
-    } catch (error) {
-      console.error("Upload error:", error);
-      alert("❌ Upload failed:\n" + error.message);
-    } finally {
-      progress.textContent = "";
+    } catch (err) {
+      console.error("Upload error:", err);
+      showUploadMsg("Upload failed ❌");
     }
+
+    showLoader(false);
   });
+
+  function showUploadMsg(msg, ok = false) {
+    uploadMsg.textContent = msg;
+    uploadMsg.style.color = ok ? "#4caf50" : "#ff5252";
+  }
 });
