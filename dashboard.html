@@ -11,7 +11,7 @@
 
   <!-- ================= HEADER ================= -->
   <header class="header">
-    <div class="logo">NETFLIX</div>
+    <div class="logo">PRIVATE NETFLIX</div>
 
     <div class="profile-menu">
       <img
@@ -111,25 +111,19 @@
   <div id="loader" class="loader hidden"></div>
 
   <!-- ================= NETFLIX STYLE PLAYER ================= -->
-  <div id="playerModal" class="player-modal">
+<div id="playerModal" class="player-modal">
+  <div class="player-container">
 
-    <!-- CENTER CONTAINER (important fix) -->
-    <div class="player-container">
-
-      <!-- header -->
-      <div class="player-header">
-        <h3>Now Playing</h3>
-        <button onclick="closePlayer()">✕</button>
-      </div>
-
-      <!-- main video/audio -->
-      <div id="playerView" class="player-view"></div>
-
-      <!-- scrollable media list -->
-      <div id="playerList" class="player-list"></div>
-
+    <div class="player-header">
+      <h3>Now Playing</h3>
+      <button onclick="closePlayer()">✕</button>
     </div>
+
+    <div id="playerView" class="player-view"></div>
+    <div id="playerList" class="player-list"></div>
+
   </div>
+</div>
 
   <!-- ================= JS ================= -->
   <script src="js/dashboard.js"></script>

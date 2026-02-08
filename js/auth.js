@@ -1,6 +1,6 @@
 /*************** CONFIG ***************/
 const API_BASE =
-  "https://script.google.com/macros/s/AKfycbwhPEpBkI7PrmQDPr6ARWUlK4ZDhacc2O7CyL5y0HL9Xf8vRbMmynxWJ5wN-csPF4xI/exec";
+  "https://script.google.com/macros/s/AKfycbx49VJP6Nf5SwOBUGjIOCaQMN7puMyCzROAb1tyT57M0jYh1T3JwlBErM90YxigS0sd/exec";
 
 /*************** HELPERS ***************/
 function showMessage(id, msg, success = false) {
