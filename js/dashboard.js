@@ -1,6 +1,6 @@
 /**************** CONFIG ****************/
 const API_BASE =
-  "https://script.google.com/macros/s/AKfycbx49VJP6Nf5SwOBUGjIOCaQMN7puMyCzROAb1tyT57M0jYh1T3JwlBErM90YxigS0sd/exec";
+  "https://script.google.com/macros/s/AKfycbytqX00rb1Z2P3w6AYXU0LBCmODYJiRgOfQS2HH3vVPf9gQSGJaAUGKmdF3Y0D80mH0/exec";
 
 let user = JSON.parse(localStorage.getItem("user"));
 let heroItem = null;
@@ -44,10 +44,9 @@ function closeUploadModal() {
 /**************** LOAD DASHBOARD ****************/
 async function loadDashboard() {
   showLoader(true);
-
   try {
-    // MEDIA
-    const res = await fetch(`${API_BASE}?action=fetchMedia`);
+    // ⭐ CHANGE: username ki jagah email bheja hai
+    const res = await fetch(`${API_BASE}?action=fetchMedia&user=${encodeURIComponent(user.email)}`);
     const data = await res.json();
 
     if (data.success) {
@@ -55,8 +54,8 @@ async function loadDashboard() {
       renderRows(allMedia);
     }
 
-    // HERO
-    const heroRes = await fetch(`${API_BASE}?action=getHero`);
+    // ⭐ CHANGE: username ki jagah email bheja hai
+    const heroRes = await fetch(`${API_BASE}?action=getHero&user=${encodeURIComponent(user.email)}`);
     const heroData = await heroRes.json();
 
     if (heroData.success) setHeroFromSheet(heroData.hero);
@@ -64,7 +63,6 @@ async function loadDashboard() {
   } catch (err) {
     console.error("Dashboard load error:", err);
   }
-
   showLoader(false);
 }
 
@@ -139,24 +137,20 @@ function openHeroEditor() {
       fd.append("file", file);
       fd.append("upload_preset", preset);
 
-      // Cloudinary upload
-      const cloudRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
-        { method: "POST", body: fd },
-      );
-
+      const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, { method: "POST", body: fd });
       const cloudData = await cloudRes.json();
       if (!cloudData.secure_url) throw new Error("Upload failed");
 
       // App Script update
-      const form = new FormData();
-      form.append("action", "setHero");
-      form.append("url", cloudData.secure_url);
-      form.append("title", user.username + " Featured");
-
+      // openHeroEditor function ke andar is block ko update karein:
+const form = new FormData();
+form.append("action", "setHero");
+form.append("url", cloudData.secure_url);
+form.append("title", user.username + " Featured");
+form.append("uploader", user.email); // ⭐ CHANGE: Username ki jagah email save hogi
       await fetch(API_BASE, { method: "POST", body: form });
 
-      loadDashboard(); // Refresh UI
+      loadDashboard(); 
       alert("Hero Banner Updated! ✅");
     } catch (err) {
       console.error(err);
@@ -239,28 +233,20 @@ function closeViewer() {
 /**************** DELETE MEDIA ****************/
 async function deleteMedia(id) {
   if (!confirm("Delete this media?")) return;
-
   showLoader(true);
-
   try {
     const form = new FormData();
     form.append("action", "deleteMedia");
     form.append("id", id);
-    form.append("user", user.username);
+    form.append("user", user.email); // ⭐ CHANGE: Username ki jagah email bheja hai
 
     const res = await fetch(API_BASE, { method: "POST", body: form });
     const data = await res.json();
-
     if (data.success) loadDashboard();
     else alert("Delete failed ❌");
-  } catch (err) {
-    console.error(err);
-    alert("Server error ❌");
-  }
-
+  } catch (err) { console.error(err); }
   showLoader(false);
 }
-
 /**************** NETFLIX POPUP PLAYER ****************/
 
 // 🔹 Global variables
