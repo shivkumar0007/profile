@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // thumbnail = same url (auto preview)
       form.append("thumbnailUrl", mediaUrl);
 
-      form.append("uploader", user.username);
+      form.append("uploader", user.email);
 
       const res = await fetch(API_BASE, { method: "POST", body: form });
       const data = await res.json();
